@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VITLearn — E‑Learning for VIT</title>
+  <meta name="description" content="VITLearn: smart, modern e‑learning for VIT students—courses, timetable, announcements, and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121734;
+      --card-2:#0f1430;
+      --muted:#9aa4c7;
+      --text:#eef2ff;
+      --brand:#7c5cff;
+      --brand-2:#19d3ff;
+      --accent:#22d3ee;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.18), transparent 70%),
+                  radial-gradient(1000px 700px at 120% 0%, rgba(25,211,255,.18), transparent 70%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1200px,92vw);margin-inline:auto}
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter:saturate(140%) blur(12px);
+      background:linear-gradient(transparent, rgba(10,12,24,.6) 60%);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.2px;
+    }
+    .logo{
+      width:36px; height:36px; border-radius:10px;
+      background: conic-gradient(from 180deg, var(--brand), var(--brand-2), var(--brand));
+      box-shadow: 0 6px 20px rgba(124,92,255,.45), inset 0 0 28px rgba(255,255,255,.22);
+    }
+    .nav a{opacity:.9; font-weight:600; padding:10px 12px; border-radius:10px}
+    .nav a:hover{background:rgba(255,255,255,.06)}
+    .cta{
+      background:linear-gradient(90deg,var(--brand),var(--brand-2));
+      color:#0a0d1a; padding:10px 16px; border-radius:12px; font-weight:800;
+      box-shadow: 0 8px 22px rgba(124,92,255,.35);
+    }
+    /* Hero */
+    .hero{display:grid; gap:26px; padding:64px 0 36px}
+    .hero h1{
+      font-size: clamp(28px, 4.8vw, 54px);
+      line-height:1.05; margin:0;
+      letter-spacing:.2px;
+    }
+    .hero p{font-size: clamp(16px, 2.2vw, 20px); color:var(--muted); margin:8px 0 0}
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      padding:12px 16px; border-radius:12px; font-weight:700;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+    }
+    .btn.primary{
+      background:linear-gradient(90deg, var(--brand) 0%, var(--brand-2) 100%);
+      color:#0a0d1a; border:none;
+    }
+    /* Search & Filters */
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding:16px; box-shadow: var(--shadow);
+    }
+    .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .filters input[type="search"]{
+      flex:1; min-width:220px; padding:12px 14px;
+      border-radius:12px; border:1px solid rgba(255,255,255,.15);
+      background:#0c1126; color:var(--text);
+    }
+    .chip{
+      padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.15);
+      cursor:pointer; user-select:none;
+    }
+    .chip.active{background:rgba(124,92,255,.18); border-color:rgba(124,92,255,.55)}
+    /* Sections */
+    section{padding:28px 0}
+    .section-title{
+      display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin:8px 0 18px;
+    }
+    .section-title h2{margin:0; font-size: clamp(20px, 3.4vw, 28px)}
+    .muted{color:var(--muted)}
+    /* Cards */
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+    .course{
+      grid-column: span 12;
+      background: linear-gradient(180deg, #121734, #0d1230);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px; overflow:hidden; position:relative;
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .course:hover{transform: translateY(-4px); border-color: rgba(124,92,255,.5); box-shadow: 0 14px 30px rgba(124,92,255,.18)}
+    .cover{
+      height:140px; background:
+      radial-gradient(600px 160px at -10% 10%, rgba(124,92,255,.55), transparent 40%),
+      radial-gradient(600px 160px at 120% -10%, rgba(25,211,255,.55), transparent 40%),
+      linear-gradient(120deg, #1b1f3f, #0f1430);
+    }
+    .course .content{padding:14px}
+    .badge{font-size:12px; font-weight:800; letter-spacing:.3px; color:#0b0f1f;
+      background:linear-gradient(90deg, var(--accent), var(--brand-2)); padding:6px 10px; border-radius:999px; display:inline-block}
+    .meta{display:flex; gap:14px; flex-wrap:wrap; color:var(--muted); font-size:14px}
+    .enroll{
+      margin-left:auto; background:transparent; border:1px solid rgba(255,255,255,.18); color:var(--text);
+      padding:8px 12px; border-radius:10px; font-weight:700; cursor:pointer;
+    }
+    .row{display:flex; align-items:center; gap:12px; margin-top:12px}
+    /* Stats */
+    .stats{
+      display:grid; grid-template-columns: repeat(4, 1fr); gap:12px;
+    }
+    .stat{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:16px; text-align:center
+    }
+    .stat .num{font-size:28px; font-weight:900}
+    /* Announcements + Timetable */
+    .two-col{display:grid; grid-template-columns: 1.2fr .8fr; gap:16px}
+    .list{display:grid; gap:12px}
+    .item{
+      padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, #121734, #0f1430);
+      display:grid; gap:6px
+    }
+    .tag{font-size:12px; color:#0b0f1f; background:#a7f3d0; padding:4px 8px; border-radius:999px; font-weight:800; display:inline-block}
+    .slot{display:flex; justify-content:space-between; align-items:center}
+    .slot small{color:var(--muted)}
+    /* Testimonials (auto-rotate) */
+    .carousel{position:relative; overflow:hidden; border-radius:14px; border:1px solid rgba(255,255,255,.1)}
+    .slides{display:flex; transition: transform .6s ease}
+    .slide{min-width:100%; padding:18px}
+    .quote{font-size:18px}
+    /* Footer */
+    footer{
+      padding:32px 0 48px; color:var(--muted);
+    }
+    .foot{display:flex; gap:16px; justify-content:space-between; flex-wrap:wrap}
+    .links a{display:block; padding:6px 0; opacity:.8}
+    /* Responsive */
+    @media (min-width:600px){
+      .course{grid-column: span 6}
+      .cover{height:160px}
+    }
+    @media (min-width:960px){
+      .course{grid-column: span 4}
+    }
+    @media (max-width:900px){
+      .two-col{grid-template-columns: 1fr}
+      .stats{grid-template-columns: repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand" aria-label="VITLearn home">
+        <div class="logo" role="img" aria-label="VITLearn logo"></div>
+        <span>VITLearn</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="#courses">Courses</a>
+        <a href="#announcements">Announcements</a>
+        <a href="#timetable">Timetable</a>
+        <a href="#help">Help</a>
+      </nav>
+      <a class="cta" href="#get-started">Get Started</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <h1>Learn faster. <span style="background:linear-gradient(90deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">Level up</span>. Succeed at VIT.</h1>
+      <p>VITLearn brings courses, labs, timetable, and campus announcements into one sleek, distraction‑free space—any device, any time.</p>
+      <div class="actions">
+        <a class="btn primary" href="#courses">Explore Courses</a>
+        <a class="btn" href="#announcements">What’s New</a>
+        <a class="btn" href="#timetable">Today’s Schedule</a>
+      </div>
+
+      <div class="panel" id="search-panel" aria-label="Course search and filters">
+        <div class="filters">
+          <input id="q" type="search" placeholder="Search courses: DSA, OS, AI, DBMS…" aria-label="Search courses" />
+          <span class="chip active" data-filter="all">All</span>
+          <span class="chip" data-filter="cs">CS</span>
+          <span class="chip" data-filter="ai">AI/ML</span>
+          <span class="chip" data-filter="ee">EEE</span>
+          <span class="chip" data-filter="me">ME</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section aria-labelledby="stats-title">
+      <div class="section-title"><h2 id="stats-title">Trusted by VIT learners</h2><span class="muted">Live campus metrics</span></div>
+      <div class="stats" role="list">
+        <div class="stat" role="listitem"><div class="num" id="s1">4,800+</div><div class="muted">Active learners</div></div>
+        <div class="stat" role="listitem"><div class="num" id="s2">320</div><div class="muted">Courses</div></div>
+        <div class="stat" role="listitem"><div class="num" id="s3">96%</div><div class="muted">Completion rate</div></div>
+        <div class="stat" role="listitem"><div class="num" id="s4">24×7</div><div class="muted">Support</div></div>
+      </div>
+    </section>
+
+    <!-- COURSES -->
+    <section id="courses" aria-labelledby="courses-title">
+      <div class="section-title">
+        <h2 id="courses-title">Featured Courses</h2>
+        <span class="muted">Hand‑picked to kickstart your semester</span>
+      </div>
+      <div class="grid" id="course-grid" role="list">
+        <!-- Course Cards (data-* used for filtering + search) -->
+        <article class="course" role="listitem" data-cat="cs" data-title="Data Structures & Algorithms">
+          <div class="cover"></div>
+          <div class="content">
+            <span class="badge">CS</span>
+            <h3>Data Structures & Algorithms</h3>
+            <p class="muted">Master time/space tradeoffs, patterns, and problem‑solving with hands‑on labs.</p>
+            <div class="row">
+              <div class="meta"><span>12 weeks</span><span>Lab + Quizzes</span></div>
+              <button class="enroll" aria-label="Enroll in Data Structures & Algorithms">Enroll</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course" role="listitem" data-cat="ai" data-title="Introduction to AI & Agents">
+          <div class="cover"></div>
+          <div class="content">
+            <span class="badge">AI</span>
+            <h3>Introduction to AI & Agents</h3>
+            <p class="muted">Search, CSPs, heuristics, and agents—implemented in Python with visual demos.</p>
+            <div class="row">
+              <div class="meta"><span>10 weeks</span><span>Project‑based</span></div>
+              <button class="enroll">Enroll</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course" role="listitem" data-cat="cs" data-title="Operating Systems">
+          <div class="cover"></div>
+          <div class="content">
+            <span class="badge">CS</span>
+            <h3>Operating Systems</h3>
+            <p class="muted">Scheduling, memory, file systems—build a mini‑OS simulator to learn by doing.</p>
+            <div class="row">
+              <div class="meta"><span>8 weeks</span><span>Simulator</span></div>
+              <button class="enroll">Enroll</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course" role="listitem" data-cat="ai" data-title="Machine Learning Fundamentals">
+          <div class="cover"></div>
+          <div class="content">
+            <span class="badge">ML</span>
+            <h3>Machine Learning Fundamentals</h3>
+            <p class="muted">From linear models to trees—train, validate, and deploy tiny models.</p>
+            <div class="row">
+              <div class="meta"><span>12 weeks</span><span>Colab labs</span></div>
+              <button class="enroll">Enroll</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course" role="listitem" data-cat="ee" data-title="Embedded Systems">
+          <div class="cover"></div>
+          <div class="content">
+            <span class="badge">EEE</span>
+            <h3>Embedded Systems</h3>
+            <p class="muted">Bare‑metal to RTOS: program microcontrollers and interface real sensors.</p>
+            <div class="row">
+              <div class="meta"><span>10 weeks</span><span>Hardware kit</span></div>
+              <button class="enroll">Enroll</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course" role="listitem" data-cat="me" data-title="CAD for Mechanical Design">
+          <div class="cover"></div>
+          <div class="content">
+            <span class="badge">ME</span>
+            <h3>CAD for Mechanical Design</h3>
+            <p class="muted">Parametric modelling, assemblies, and render workflows for real projects.</p>
+            <div class="row">
+              <div class="meta"><span>6 weeks</span><span>Portfolio</span></div>
+              <button class="enroll">Enroll</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Announcements + Timetable -->
+    <section class="two-col" id="announcements" aria-labelledby="ann-title">
+      <div>
+        <div class="section-title"><h2 id="ann-title">Announcements</h2><span class="muted">Stay in the loop</span></div>
+        <div class="list" id="ann-list" role="list">
+          <div class="item" role="listitem">
+            <span class="tag">NEW</span>
+            <strong>AI Lab upgraded</strong>
+            <span class="muted">NVIDIA GPU nodes added for ML courses (B‑Block, 2nd floor).</span>
+          </div>
+          <div class="item" role="listitem">
+            <span class="tag" style="background:#fde68a;">REMINDER</span>
+            <strong>Mid‑sem schedule out</strong>
+            <span class="muted">Check the exam portal for hall tickets and timings.</span>
+          </div>
+          <div class="item" role="listitem">
+            <span class="tag" style="background:#c7d2fe;">WORKSHOP</span>
+            <strong>Rust for Systems</strong>
+            <span class="muted">Hands‑on on memory safety and async. Reg closes Fri.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside id="timetable" aria-labelledby="time-title">
+        <div class="section-title"><h2 id="time-title">Today’s Timetable</h2><span class="muted">Asia/Kolkata</span></div>
+        <div class="list">
+          <div class="item slot">
+            <div><strong>08:00–09:00</strong> • DSA (G‑201)</div><small>Prof. Iyer</small>
+          </div>
+          <div class="item slot">
+            <div><strong>10:00–11:00</strong> • OS (Lab L‑102)</div><small>Process scheduling</small>
+          </div>
+          <div class="item slot">
+            <div><strong>13:00–14:00</strong> • AI (A‑305)</div><small>Heuristics</small>
+          </div>
+          <div class="item slot">
+            <div><strong>15:00–16:00</strong> • DBMS (G‑105)</div><small>Indexing</small>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Testimonials -->
+    <section aria-labelledby="test-title">
+      <div class="section-title"><h2 id="test-title">What students say</h2><span class="muted">Small wins → big outcomes</span></div>
+      <div class="carousel panel" aria-roledescription="carousel" aria-label="Testimonials">
+        <div class="slides" id="slides">
+          <div class="slide">
+            <p class="quote">“VITLearn’s timetable + labs in one place saved me hours every week.”</p>
+            <p class="muted">— Anjali A., CSE</p>
+          </div>
+          <div class="slide">
+            <p class="quote">“Auto‑deploy from GitHub means my course project is always live.”</p>
+            <p class="muted">— Raghav M., AIML</p>
+          </div>
+          <div class="slide">
+            <p class="quote">“The OS simulator course finally made scheduling click!”</p>
+            <p class="muted">— Priya S., CSE</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Help / FAQ -->
+    <section id="help" aria-labelledby="help-title">
+      <div class="section-title"><h2 id="help-title">Help & FAQs</h2><span class="muted">Quick answers</span></div>
+      <div class="grid">
+        <details class="item" style="grid-column:span 12">
+          <summary><strong>How do I enroll in a course?</strong></summary>
+          <p class="muted">Click “Enroll” on a course card. You’ll be prompted to log in with your VIT ID.</p>
+        </details>
+        <details class="item" style="grid-column:span 12">
+          <summary><strong>Can I access labs from mobile?</strong></summary>
+          <p class="muted">Yes—VITLearn adapts to any screen size. For coding labs, landscape mode is best.</p>
+        </details>
+        <details class="item" style="grid-column:span 12">
+          <summary><strong>Do you support dark/light mode?</strong></summary>
+          <p class="muted">This theme is dark‑first. You can add a toggle easily (ask us if you want the code!).</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <div class="brand"><div class="logo"></div><strong>VITLearn</strong></div>
+      <div class="links">
+        <a href="#courses">Courses</a>
+        <a href="#announcements">Announcements</a>
+        <a href="#timetable">Timetable</a>
+        <a href="#help">Help</a>
+      </div>
+      <div class="muted">© <span id="year"></span> VIT E‑Learning · Built for speed & clarity</div>
+    </div>
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Course search + filter
+    const chips = [...document.querySelectorAll('.chip')];
+    const q = document.getElementById('q');
+    const cards = [...document.querySelectorAll('.course')];
+
+    function applyFilters(){
+      const cat = chips.find(c=>c.classList.contains('active'))?.dataset.filter ?? 'all';
+      const query = (q.value || '').toLowerCase();
+      cards.forEach(card=>{
+        const inCat = (cat === 'all') || (card.dataset.cat === cat);
+        const inText = card.dataset.title.toLowerCase().includes(query);
+        card.style.display = (inCat && inText) ? '' : 'none';
+      });
+    }
+    chips.forEach(ch=>{
+      ch.addEventListener('click', ()=>{
+        chips.forEach(c=>c.classList.remove('active'));
+        ch.classList.add('active');
+        applyFilters();
+      });
+    });
+    q.addEventListener('input', applyFilters);
+
+    // Simple testimonial auto-rotate
+    const slides = document.getElementById('slides');
+    let idx = 0;
+    setInterval(()=>{
+      idx = (idx+1)%3;
+      slides.style.transform = `translateX(-${idx*100}%)`;
+    }, 4000);
+
+    // Fun: lightly animate stats
+    const nice = (n)=>n.toLocaleString('en-IN');
+    const animateNum = (el, end, dur=1200)=>{
+      const start = 0; const t0 = performance.now();
+      function step(t){
+        const p = Math.min(1, (t - t0)/dur);
+        el.textContent = nice(Math.floor(start + (end-start)*p)) + (el.dataset.suffix||'');
+        if(p<1) requestAnimationFrame(step);
+      } requestAnimationFrame(step);
+    };
+    animateNum(document.getElementById('s1'), 4820);
+    animateNum(document.getElementById('s2'), 320);
+    document.getElementById('s3').dataset.suffix = '%';
+    animateNum(document.getElementById('s3'), 96);
+  </script>
+</body>
+</html>
